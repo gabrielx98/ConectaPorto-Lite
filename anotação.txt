@@ -1,0 +1,4 @@
+categoria conteiner = ['IMPORTACAO', 'EXPORTACAO']
+estado conteiner = ['CHEIO', 'VAZIO']
+tamanho conteiner = ['20 PÉS', '40 PÉS' ]
+categoria movimentação = ['REPOSICIONAMENTO', 'EMBARQUE', 'DESCARGA', 'GATE IN', 'GATE OUT', 'PESAGEM', 'SCANNER']
