@@ -6,29 +6,35 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Conteiner')
 @Controller('Conteiner')
 export class ConteinerController {
-  constructor(private readonly conteinerService: ConteinerService) {}
+  constructor(private readonly conteinerService: ConteinerService) { }
 
-  @Post('/Cadastrar')
+  @Post('/cadastrar')
   create(@Body() Conteiner: Conteiner) {
-    return this.conteinerService.create(Conteiner);
+    return this.conteinerService.create(Conteiner)
   }
 
-  @Get('/Listar')
+  @Get('/listar')
   findAll() {
     return this.conteinerService.findAll();
   }
 
-  @Get('/Buscar/:id')
+  @Get('/buscar/cliente/:id')
+  findByClient(@Param('id') id: string) {
+    return this.conteinerService.findByClient(+id);
+  }
+
+
+  @Get('/buscar/:id')
   findOne(@Param('id') id: string) {
     return this.conteinerService.findOne(+id);
   }
 
-  @Patch('/Atualizar')
+  @Patch('/atualizar')
   update(@Body() Conteiner: Conteiner) {
     return this.conteinerService.update(Conteiner);
   }
 
-  @Delete('/Remover/:id')
+  @Delete('/remover/:id')
   remove(@Param('id') id: string) {
     return this.conteinerService.remove(+id);
   }

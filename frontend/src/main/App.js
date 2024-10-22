@@ -3,6 +3,8 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import 'font-awesome/css/font-awesome.min.css';
 
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import Nav from '../components/template/Nav';
@@ -15,6 +17,7 @@ export default props =>
       <Nav />
       <Routes />
       <Footer />
+      <ToastContainer />
     </div>
   </BrowserRouter>
 

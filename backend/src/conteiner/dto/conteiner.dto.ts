@@ -4,7 +4,7 @@ export class Conteiner {
     id: number
     codigo: string
     categoria: string
-    cliente: Cliente
+    clienteId: number
     tamanho: string
     estado: string
 }

@@ -12,20 +12,13 @@ export class ClienteService {
 
 
   async create(Cliente: Cliente) {
-    return await this.clienteRepository.create(Cliente as any)
-    .catch(erro => {
-      return erro;
-    }).finally( () => {
-      console.log("Fim do Cadastro!")
-    });
+    return await this.clienteRepository.create(Cliente as any);
   }
 
   async findAll() {
     return await this.clienteRepository.findAll()
     .catch(erro => {
       return erro;
-    }).finally( () => {
-      console.log("Fim da Listagem!")
     });
   }
 

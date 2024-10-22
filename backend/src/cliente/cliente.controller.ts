@@ -8,27 +8,27 @@ import { ApiTags } from '@nestjs/swagger';
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
-  @Post('/Cadastrar')
+  @Post('/cadastrar')
   create(@Body() Cliente: Cliente) {
     return this.clienteService.create(Cliente);
   }
 
-  @Get('/Listar')
+  @Get('/listar')
   findAll() {
     return this.clienteService.findAll();
   }
 
-  @Get('/Buscar/:id')
+  @Get('/buscar/:id')
   findOne(@Param('id') id: string) {
     return this.clienteService.findOne(+id);
   }
 
-  @Patch('/Atualizar')
+  @Patch('/atualizar')
   update(@Body() Cliente: Cliente) {
     return this.clienteService.update(Cliente);
   }
 
-  @Delete('/Remover/:id')
+  @Delete('/remover/:id')
   remove(@Param('id') id: string) {
     return this.clienteService.remove(+id);
   }

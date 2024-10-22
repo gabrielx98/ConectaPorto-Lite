@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Movimentacao } from './dto/movimentacao.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
+import { ConteinerService } from 'src/conteiner/conteiner.service';
 
 @Injectable()
 export class MovimentacaoService {
   constructor(
     @InjectModel(Movimentacoes)
     private movimentacaoRepository: typeof Movimentacoes,
+    private conteinerService: ConteinerService
   ) {}
 
   async create(Movimentacao: Movimentacao) {
@@ -34,6 +36,35 @@ export class MovimentacaoService {
       return erro;
     }).finally( () => {
       console.log("Fim da Busca!")
+    });
+  }
+
+  async findUnitAll(id: number) {
+    const conteiner =  await this.conteinerService.findOne(id);
+    return await this.movimentacaoRepository.findAll({
+      where: {
+        conteiner: conteiner
+      }, 
+      order: [['updatedAt','DESC']]
+    }).catch(erro => {
+      return erro;
+    }).finally( () => {
+      console.log("Fim da Busca!")
+    });
+  }
+
+  async findLastUpdate(id?: number) {
+    let query = 'SELECT * FROM Movimentacoes m INNER JOIN (SELECT id,MAX(updatedAt) as maxDataAtualizacao FROM Movimentacoes ';
+    if (id){
+      query += `WHERE clienteId = ${id} `;
+    }
+    query += 'GROUP BY id) as ultimas ON m.id = ultimas.id AND m.updatedAt = ultimas.maxDataAtualizacao';
+
+    return await this.movimentacaoRepository.sequelize.query(query)
+    .catch(erro => {
+      return erro;
+    }).finally(() => {
+      console.log("Fim da consulta")
     });
   }
 

@@ -40,7 +40,7 @@ export class Conteineres extends Model<Conteiner>{
         type: DataType.INTEGER,
         allowNull: false,
     })
-    clienteId: string;
+    clienteId: number;
 
     @BelongsTo(() => Clientes)
     cliente: Clientes;
