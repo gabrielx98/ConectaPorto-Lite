@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Movimentacao } from './dto/movimentacao.dto';
+import { Movimentacao, MovimentacaoModel } from './dto/movimentacao.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
 import { ConteinerService } from 'src/conteiner/conteiner.service';
@@ -12,12 +12,12 @@ export class MovimentacaoService {
     private conteinerService: ConteinerService
   ) {}
 
-  async create(Movimentacao: Movimentacao) {
-    return await this.movimentacaoRepository.create(Movimentacao as any)
+  async create(NewMovimentacao: MovimentacaoModel) {
+    const conteiner =  await this.conteinerService.findOne(NewMovimentacao.conteinerId);
+    NewMovimentacao.codigo = conteiner.codigo + "_" + Date.now().toString();
+    return await this.movimentacaoRepository.create(Movimentacao.fromModel(NewMovimentacao) as any)
     .catch(erro => {
       return erro;
-    }).finally( () => {
-      console.log("Fim do Cadastro!")
     });
   }
 
@@ -40,10 +40,10 @@ export class MovimentacaoService {
   }
 
   async findUnitAll(id: number) {
-    const conteiner =  await this.conteinerService.findOne(id);
+    //const conteiner =  await this.conteinerService.findOne(id);
     return await this.movimentacaoRepository.findAll({
       where: {
-        conteiner: conteiner
+        conteinerId: id
       }, 
       order: [['updatedAt','DESC']]
     }).catch(erro => {

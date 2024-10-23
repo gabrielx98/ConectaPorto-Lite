@@ -33,7 +33,7 @@ export default class ClientesHome extends Component {
                         }
 
                         if (error) {
-                            return <div className="alert alert-danger" role="alert">Erro ao carregar Clientes: {error.message}</div>;
+                            return <div className="alert alert-danger" role="alert">Erro ao carregar Lista: {error.message}</div>;
                         }
 
                         return (

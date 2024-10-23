@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 
 const baseURL = process.env.REACT_APP_API_URL;
 
 const useMovimentacoes = () => {
   const [Movimentacoes, setMovimentacoes] = useState([]);
+  const [Clientes, setClientes] = useState([]);
+  const [Conteineres, setConteineres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const carregarMovimentacoes = async () => {
       try {
-        const data = await axios(baseURL + "/Movimentacao/Listar");
-        setMovimentacoes(data.data);
+        const movimentacao = await axios(baseURL + "/Movimentacao/Listar");
+        const conteiner = await axios(baseURL + "/conteiner/listar");
+        const cliente = await axios(baseURL + "/cliente/listar");
+        setMovimentacoes(movimentacao.data);
+        setClientes(cliente.data);
+        setConteineres(conteiner.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -23,17 +31,24 @@ const useMovimentacoes = () => {
     carregarMovimentacoes();
   }, []);
 
+  const navigate = useNavigate()
+
   const cadastrarMovimentacao = async (novoMovimentacao) => {
     setLoading(true);
     try {
       const response = await axios.post(baseURL + '/Movimentacao/Cadastrar', novoMovimentacao);
       setMovimentacoes([...Movimentacoes, response.data]);
+
+      if(response.status === HttpStatusCode.Created){
+        setLoading(false);
+        navigate('/movimentacoes')
+        toast.success("Movimentação cadastrada com sucesso.")
+      }
     } catch (err) {
       setError(err);
-    } finally {
-      setLoading(false);
+      toast.error("Erro ao Registrar.")
     }
-  };
+    }
 
   const atualizarMovimentacao = async (id, MovimentacaoAtualizado) => {
     setLoading(true);
@@ -59,7 +74,7 @@ const useMovimentacoes = () => {
     }
   };
 
-  return { Movimentacoes, loading, error, cadastrarMovimentacao, atualizarMovimentacao, deletarMovimentacao };
+  return { Movimentacoes, Conteineres, Clientes, loading, error, cadastrarMovimentacao, atualizarMovimentacao, deletarMovimentacao };
 };
 
 export default useMovimentacoes;

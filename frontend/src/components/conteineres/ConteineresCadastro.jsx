@@ -43,7 +43,7 @@ export default class ConteineresCadastro extends Component {
             <div className="d-flex justify-content-center">
             <div className="card mb-3" style={{ width: "500px" }}>
                 <ConteinerProvider>
-                    {({ Clientes, loading, error, cadastrarConteiner }) => {
+                    {({ Clientes, cadastrarConteiner }) => {
                         return (
                             <form className="d-flex flex-column text-start p-3">
                                 

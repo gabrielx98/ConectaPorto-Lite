@@ -21,28 +21,18 @@ export default class ClientesCadastro extends Component {
     }
 
     async save(metodo) {
-        /* if (cliente.codigo === '') {
-            document.getElementById("codigo").classList.add("is-invalid")
-            toast.error("Preencha o campo Sigla")
-        } if (cliente.nome === '') {
-            toast.error("Preencha o campo Nome")
-            document.getElementById("nome").classList.add("is-invalid")
-        } else {
-            metodo(cliente)
-            toast.success('Salvo com sucesso');
-        } */
-       const cliente = this.state.cliente;
-       let valid = true;
-       for (let key in cliente){
-        if (cliente[key] === ''){
-            document.getElementById(key).classList.add("is-invalid")
-                    toast.error(`Preencha o campo ${key}`)
-                    valid = false
+        const cliente = this.state.cliente;
+        let valid = true;
+        for (let key in cliente) {
+            if (cliente[key] === '') {
+                document.getElementById(key).classList.add("is-invalid")
+                toast.error(`Preencha o campo ${key}`)
+                valid = false
+            }
         }
-       }
-       if(valid){
-        await metodo(cliente);
-       }
+        if (valid) {
+            await metodo(cliente);
+        }
     }
 
     render() {

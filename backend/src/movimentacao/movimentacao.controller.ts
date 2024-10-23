@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MovimentacaoService } from './movimentacao.service';
-import { Movimentacao } from './dto/movimentacao.dto';
+import { Movimentacao, MovimentacaoModel } from './dto/movimentacao.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Movimentacao')
@@ -9,7 +9,7 @@ export class MovimentacaoController {
   constructor(private readonly movimentacaoService: MovimentacaoService) {}
 
   @Post('/cadastrar')
-  create(@Body() Movimentacao: Movimentacao) {
+  create(@Body() Movimentacao: MovimentacaoModel) {
     return this.movimentacaoService.create(Movimentacao);
   }
 
