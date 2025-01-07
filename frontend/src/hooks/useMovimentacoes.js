@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios, { HttpStatusCode } from "axios";
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const baseURL = process.env.REACT_APP_API_URL;
@@ -11,11 +11,17 @@ const useMovimentacoes = () => {
   const [Conteineres, setConteineres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const carregarMovimentacoes = async () => {
       try {
-        const movimentacao = await axios(baseURL + "/Movimentacao/Listar");
+        var movimentacao;
+        if(id !== undefined){
+          movimentacao = await axios(baseURL + `/Movimentacao/Buscar/${id}`);
+        }else{
+          movimentacao = await axios(baseURL + "/Movimentacao/Listar");
+        }
         const conteiner = await axios(baseURL + "/conteiner/listar");
         const cliente = await axios(baseURL + "/cliente/listar");
         setMovimentacoes(movimentacao.data);
@@ -29,7 +35,7 @@ const useMovimentacoes = () => {
     };
 
     carregarMovimentacoes();
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate()
 
@@ -50,15 +56,20 @@ const useMovimentacoes = () => {
     }
     }
 
-  const atualizarMovimentacao = async (id, MovimentacaoAtualizado) => {
+  const atualizarMovimentacao = async (MovimentacaoAtualizado) => {
     setLoading(true);
     try {
-      const response = await axios.put(baseURL + `/Movimentacao/Atualizar/${id}`, MovimentacaoAtualizado);
-      setMovimentacoes(Movimentacoes.map(Movimentacao => Movimentacao.id === id ? response.data : Movimentacao));
+      const response = await axios.patch(baseURL + `/movimentacao/atualizar`, MovimentacaoAtualizado);
+      setMovimentacoes(response.data);
+      if(response.status === HttpStatusCode.Ok){
+        setLoading(false);
+        navigate('/movimentacoes')
+        toast.success("Movimentação atualizada com sucesso.")
+      }
     } catch (err) {
       setError(err);
-    } finally {
-      setLoading(false);
+      console.log(err);
+      toast.error("Erro ao Registrar.");
     }
   };
 

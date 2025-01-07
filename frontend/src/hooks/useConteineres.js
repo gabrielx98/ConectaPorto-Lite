@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios, { HttpStatusCode } from "axios";
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 const baseURL = process.env.REACT_APP_API_URL;
@@ -10,11 +10,17 @@ const useConteineres = () => {
   const [Clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const carregarConteineres = async () => {
+      var conteiner;
       try {
-        const conteiner = await axios(baseURL + "/conteiner/listar");
+        if(id !== undefined){
+          conteiner = await axios(baseURL + `/Conteiner/Buscar/${id}`)
+        }else{
+          conteiner = await axios(baseURL + "/conteiner/listar");
+        }
         const cliente = await axios(baseURL + "/cliente/listar");
         setConteineres(conteiner.data);
         setClientes(cliente.data);
@@ -26,7 +32,7 @@ const useConteineres = () => {
     };
 
     carregarConteineres();
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate()
 
@@ -48,15 +54,19 @@ const useConteineres = () => {
     }
   };
 
-  const atualizarConteiner = async (id, ConteinerAtualizado) => {
+  const atualizarConteiner = async (ConteinerAtualizado) => {
     setLoading(true);
     try {
-      const response = await axios.put(baseURL + `/conteiner/atualizar/${id}`, ConteinerAtualizado);
-      setConteineres(Conteineres.map(Conteiner => Conteiner.id === id ? response.data : Conteiner));
+      const response = await axios.patch(baseURL + `/conteiner/atualizar`, ConteinerAtualizado);
+      setConteineres(response.data);
+      if(response.status === HttpStatusCode.Ok){
+        setLoading(false);
+        navigate('/conteineres')
+        toast.success("Conteiner atualizado com sucesso.")
+      }
     } catch (err) {
       setError(err);
-    } finally {
-      setLoading(false);
+      toast.error("Erro ao Registrar.");
     }
   };
 

@@ -11,9 +11,9 @@ export default class ClientesHome extends Component {
             loading: true,
             error: null
         }
-
+        
     }
-    
+         
     render() {
         return (
             <Main>
@@ -26,7 +26,7 @@ export default class ClientesHome extends Component {
                 </div>
 
                 <ClientesProvider>
-                    {({ clientes, loading, error, cadastrarCliente, atualizarCliente, deletarCliente }) => {
+                    {({ clientes, loading, error, deletarCliente}) => {
 
                         if (loading) {
                             return <div className="alert alert-info" role="alert">Carregando...</div>;
@@ -55,10 +55,11 @@ export default class ClientesHome extends Component {
                                                 <td>{cliente.codigo}</td>
                                                 <td>{cliente.nome}</td>
                                                 <td>
-                                                    <button className="btn btn-warning btn-sm mx-2 mb-1"
-                                                        onClick={() => console.log("rota de atualizar")}>
+                                                    <a className="btn btn-warning btn-sm mx-2 mb-1"
+                                                        href={`/clientes/atualizar/${cliente.id}`}>
                                                         <i className="fa fa-pencil"></i>
-                                                    </button>
+                                                    </a>
+                                                    
                                                     <button className="btn btn-danger btn-sm ml-2 mb-1"
                                                         onClick={() => deletarCliente(cliente.id)}>
                                                         <i className="fa fa-trash"></i>
@@ -76,3 +77,5 @@ export default class ClientesHome extends Component {
         )
     }
 }
+
+

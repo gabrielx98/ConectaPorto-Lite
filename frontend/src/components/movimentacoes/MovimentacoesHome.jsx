@@ -40,10 +40,10 @@ export default class MovimentacoesHome extends Component {
                     <td>{this.formateData(mov.dataInicio)}</td>
                     <td>{this.formateData(mov.dataFim)}</td>
                     <td>
-                        <button className="btn btn-warning btn-sm mx-2 mb-1"
-                            onClick={() => console.log("atualizar")}>
+                        <a className="btn btn-warning btn-sm mx-2 mb-1"
+                            href={`/movimentacoes/atualizar/${mov.id}`}>
                             <i className="fa fa-pencil"></i>
-                        </button>
+                        </a>
                         <button className="btn btn-danger btn-sm ml-2 mb-1"
                             onClick={() => deletarMovimentacao(mov)}>
                             <i className="fa fa-trash"></i>

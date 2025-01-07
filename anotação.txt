@@ -2,3 +2,9 @@ categoria conteiner = ['IMPORTACAO', 'EXPORTACAO']
 estado conteiner = ['CHEIO', 'VAZIO']
 tamanho conteiner = ['20 PÉS', '40 PÉS' ]
 categoria movimentação = ['REPOSICIONAMENTO', 'EMBARQUE', 'DESCARGA', 'GATE IN', 'GATE OUT', 'PESAGEM', 'SCANNER']
+
+
+quando alterar cicla do cliente deve atualizar o codigo dos conteineres e movimentações
+testes
+
+quando atualizar o conteiner da movimentação deve atualizar o codigo da movimentação

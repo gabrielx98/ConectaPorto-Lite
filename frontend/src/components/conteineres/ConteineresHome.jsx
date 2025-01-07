@@ -62,10 +62,10 @@ export default class ConteineresHome extends Component {
                                                     <td>{conteiner.tamanho}</td>
                                                     <td>{conteiner.estado}</td>
                                                     <td>
-                                                        <button className="btn btn-warning btn-sm mx-2 mb-1"
-                                                            onClick={() => console.log("atualizar")}>
+                                                        <a className="btn btn-warning btn-sm mx-2 mb-1"
+                                                            href={`/conteineres/atualizar/${conteiner.id}`}>
                                                             <i className="fa fa-pencil"></i>
-                                                        </button>
+                                                        </a>
                                                         <button className="btn btn-danger btn-sm ml-2 mb-1"
                                                             onClick={() => deletarConteiner(conteiner.id)}>
                                                             <i className="fa fa-trash"></i>
