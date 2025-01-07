@@ -11,8 +11,8 @@ import MovimentacoesHome from "../components/movimentacoes/MovimentacoesHome";
 import MovimentacoesCadastro from "../components/movimentacoes/MovimentacoesCadastro";
 import ConteineresAtualizar from "../components/conteineres/ConteineresAtualizar";
 import MovimentacoesAtualizar from "../components/movimentacoes/MovimentacoesAtualizar";
-// eslint-disable-next-line
-export default props =>
+
+const AppRoutes = () => (
     <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/clientes" element={<ClientesHome />} />
@@ -26,4 +26,5 @@ export default props =>
         <Route path="/movimentacoes/atualizar/:id" element={<MovimentacoesAtualizar/>} />
         <Route path="*" element={<Home />} />
     </Routes>
-
+);
+export default AppRoutes;

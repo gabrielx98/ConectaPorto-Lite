@@ -3,6 +3,7 @@ estado conteiner = ['CHEIO', 'VAZIO']
 tamanho conteiner = ['20 PÉS', '40 PÉS' ]
 categoria movimentação = ['REPOSICIONAMENTO', 'EMBARQUE', 'DESCARGA', 'GATE IN', 'GATE OUT', 'PESAGEM', 'SCANNER']
 
+login
 
 quando alterar cicla do cliente deve atualizar o codigo dos conteineres e movimentações
 testes
