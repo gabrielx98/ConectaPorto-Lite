@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
 //import { ConteinerService } from '../conteiner/conteiner.service';
 import { Conteineres } from '../conteiner/entities/conteiner.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class MovimentacaoService {
@@ -95,7 +96,16 @@ export class MovimentacaoService {
     });
   }
 
-  async updateByCodigo(codigo: string) {
+  async updateByCodigo(newCodigo: string, oldCodigo: string) {
+    const movimentacoes = await this.movimentacaoRepository.findAll({
+      where: { codigo: { [Op.like]: `${oldCodigo}%` } }
+    });
 
+    for (const movimentacao of movimentacoes) {
+      movimentacao.codigo = newCodigo + movimentacao.codigo.slice(3);
+      await movimentacao.save();
+    }
+
+    return movimentacoes;
   }
 }

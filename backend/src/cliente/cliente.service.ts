@@ -41,7 +41,7 @@ export class ClienteService {
     var id = Cliente.id;
     var cliente = await this.clienteRepository.findByPk(id);
     if(cliente.codigo != Cliente.codigo){
-      this.updateCodigo(Cliente.codigo);
+      this.updateCodigo(Cliente.codigo, cliente.codigo);
     }
     return await cliente.update(Cliente, {
       where: {id},
@@ -63,8 +63,8 @@ export class ClienteService {
     });
   }
 
-  async updateCodigo(codigo: string ){
-    await this.conteinerService.updateByCodigo(codigo);
-    await this.movimentacaoService.updateByCodigo(codigo);
+  async updateCodigo(newCodigo: string, oldCodigo: string){
+    await this.conteinerService.updateByCodigo(newCodigo, oldCodigo);
+    await this.movimentacaoService.updateByCodigo(newCodigo, oldCodigo);
   }
 }

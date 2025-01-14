@@ -4,6 +4,8 @@ import { Conteineres } from './entities/conteiner.entity';
 
 import { InjectModel } from '@nestjs/sequelize';
 
+import { Op } from 'sequelize';
+
 @Injectable()
 export class ConteinerService {
   constructor(
@@ -69,6 +71,18 @@ export class ConteinerService {
     });
   }
 
-  async updateByCodigo(codigo: string){
+  async updateByCodigo(newCodigo: string, oldCodigo: string){
+    const conteineres = await this.conteinerRepository.findAll({
+      where: {
+        codigo: {
+          [Op.like]: `${oldCodigo}%`
+        }
+      }
+    });
+
+    for (const conteiner of conteineres) {
+      conteiner.codigo = newCodigo + conteiner.codigo.slice(3);
+      await conteiner.save();
+    }
   }
 }
