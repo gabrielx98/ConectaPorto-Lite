@@ -76,6 +76,11 @@ export class MovimentacaoService {
   async update(Movimentacao: Movimentacao) {
     var id = Movimentacao.id;
     var movimentacao = await this.movimentacaoRepository.findByPk(id);
+    if(movimentacao.conteinerId != Movimentacao.conteinerId.toString()){
+      const newConteiner = await this.conteinerRepository.findByPk(Movimentacao.conteinerId);
+      const oldConteiner = await this.conteinerRepository.findByPk(movimentacao.conteinerId);
+      Movimentacao.codigo = Movimentacao.codigo.replace(oldConteiner.codigo, newConteiner.codigo);
+    }
     return await movimentacao.update(Movimentacao, {
       where: {id},
       returning: true,

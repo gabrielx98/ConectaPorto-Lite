@@ -5,7 +5,5 @@ categoria movimentação = ['REPOSICIONAMENTO', 'EMBARQUE', 'DESCARGA', 'GATE IN
 
 login
 
-quando alterar cicla do cliente deve atualizar o codigo dos conteineres e movimentações
 testes
 
-quando atualizar o conteiner da movimentação deve atualizar o codigo da movimentação
