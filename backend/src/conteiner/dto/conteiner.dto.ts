@@ -1,4 +1,4 @@
-import { Cliente } from "src/cliente/dto/cliente.dto"
+import { Cliente } from "../../cliente/dto/cliente.dto"
 
 export class Conteiner {
     id: number

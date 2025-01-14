@@ -1,7 +1,7 @@
 import { Column, Table, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { Movimentacao } from '../dto/movimentacao.dto';
-import { Clientes } from 'src/cliente/entities/cliente.entity';
-import { Conteineres } from 'src/conteiner/entities/conteiner.entity';
+import { Clientes } from '../../cliente/entities/cliente.entity';
+import { Conteineres } from '../../conteiner/entities/conteiner.entity';
 
 @Table
 export class Movimentacoes extends Model<Movimentacao>{

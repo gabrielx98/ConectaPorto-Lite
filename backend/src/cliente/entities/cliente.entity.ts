@@ -1,6 +1,6 @@
 import { Column, Table, Model, DataType, HasMany } from 'sequelize-typescript';
 import { Cliente } from '../dto/cliente.dto';
-import { Conteineres } from 'src/conteiner/entities/conteiner.entity';
+import { Conteineres } from '../../conteiner/entities/conteiner.entity';
 
 @Table
 export class Clientes extends Model<Cliente> {

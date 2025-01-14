@@ -1,5 +1,5 @@
-import { Cliente } from "src/cliente/dto/cliente.dto"
-import { Conteiner } from "src/conteiner/dto/conteiner.dto"
+import { Cliente } from "../../cliente/dto/cliente.dto"
+import { Conteiner } from "../../conteiner/dto/conteiner.dto"
 
 export class Movimentacao {
     
