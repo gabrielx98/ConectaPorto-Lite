@@ -3,7 +3,7 @@ import { Conteiner } from './dto/conteiner.dto';
 import { Conteineres } from './entities/conteiner.entity';
 
 import { InjectModel } from '@nestjs/sequelize';
-import { ClienteService } from 'src/cliente/cliente.service';
+import { ClienteService } from '../cliente/cliente.service';
 
 
 @Injectable()

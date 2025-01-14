@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Movimentacao, MovimentacaoModel } from './dto/movimentacao.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
-import { ConteinerService } from 'src/conteiner/conteiner.service';
+import { ConteinerService } from '../conteiner/conteiner.service';
 
 @Injectable()
 export class MovimentacaoService {
