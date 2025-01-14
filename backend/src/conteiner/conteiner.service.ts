@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Conteiner } from './dto/conteiner.dto';
 import { Conteineres } from './entities/conteiner.entity';
 
 import { InjectModel } from '@nestjs/sequelize';
-import { ClienteService } from '../cliente/cliente.service';
-
 
 @Injectable()
 export class ConteinerService {
   constructor(
     @InjectModel(Conteineres)
-    private conteinerRepository: typeof Conteineres,
-    private readonly clienteService: ClienteService
+    private readonly conteinerRepository: typeof Conteineres,
+    
   ) {}
 
   async create(Conteiner: Conteiner) {
@@ -27,7 +25,6 @@ export class ConteinerService {
   }
 
    async findByClient(clientId: number) {
-    //const cliente = await this.clienteService.findOne(clientId);
     return await this.conteinerRepository.findAll({
       where: {
         clienteId: clientId
@@ -70,5 +67,8 @@ export class ConteinerService {
     }).finally( () => {
       console.log("Fim da Remoção!")
     });
+  }
+
+  async updateByCodigo(codigo: string){
   }
 }

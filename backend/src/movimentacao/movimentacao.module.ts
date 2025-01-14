@@ -3,11 +3,12 @@ import { MovimentacaoService } from './movimentacao.service';
 import { MovimentacaoController } from './movimentacao.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
-import { ConteinerModule } from 'src/conteiner/conteiner.module';
+import { Conteineres } from '../conteiner/entities/conteiner.entity';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Movimentacoes]), ConteinerModule],
+  imports: [SequelizeModule.forFeature([Movimentacoes, Conteineres])],
   controllers: [MovimentacaoController],
   providers: [MovimentacaoService],
+  exports: [MovimentacaoService]
 })
 export class MovimentacaoModule {}

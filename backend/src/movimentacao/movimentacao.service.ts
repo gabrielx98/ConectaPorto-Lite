@@ -2,18 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { Movimentacao, MovimentacaoModel } from './dto/movimentacao.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Movimentacoes } from './entities/movimentacao.entity';
-import { ConteinerService } from '../conteiner/conteiner.service';
+//import { ConteinerService } from '../conteiner/conteiner.service';
+import { Conteineres } from '../conteiner/entities/conteiner.entity';
 
 @Injectable()
 export class MovimentacaoService {
   constructor(
     @InjectModel(Movimentacoes)
     private movimentacaoRepository: typeof Movimentacoes,
-    private conteinerService: ConteinerService
+    //private conteinerService: ConteinerService
+    @InjectModel(Conteineres)
+    private conteinerRepository: typeof Conteineres
   ) {}
 
   async create(NewMovimentacao: MovimentacaoModel) {
-    const conteiner =  await this.conteinerService.findOne(NewMovimentacao.conteinerId);
+    const conteiner = await this.conteinerRepository.findByPk(NewMovimentacao.conteinerId);
+    //const conteiner =  await this.conteinerService.findOne(NewMovimentacao.conteinerId);
     NewMovimentacao.codigo = conteiner.codigo + "_" + Date.now().toString();
     return await this.movimentacaoRepository.create(Movimentacao.fromModel(NewMovimentacao) as any)
     .catch(erro => {
@@ -89,5 +93,9 @@ export class MovimentacaoService {
     }).finally( () => {
       console.log("Fim da Remoção!")
     });
+  }
+
+  async updateByCodigo(codigo: string) {
+
   }
 }

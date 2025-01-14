@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Injectable, Inject } from '@nestjs/common';
 import { Cliente } from './dto/cliente.dto';
 import { Clientes } from './entities/cliente.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { ConteinerService} from '../conteiner/conteiner.service';
+import { MovimentacaoService} from '../movimentacao/movimentacao.service';
+import { ConteinerModule } from 'src/conteiner/conteiner.module';
 
 @Injectable()
 export class ClienteService {
   constructor(
     @InjectModel(Clientes)
     private clienteRepository: typeof Clientes,
+    @Inject(forwardRef(() => ConteinerService))
+    private conteinerService: ConteinerService,
+    private movimentacaoService: MovimentacaoService 
   ) {}
 
 
@@ -34,6 +40,9 @@ export class ClienteService {
   async update(Cliente: Cliente) {
     var id = Cliente.id;
     var cliente = await this.clienteRepository.findByPk(id);
+    if(cliente.codigo != Cliente.codigo){
+      this.updateCodigo(Cliente.codigo);
+    }
     return await cliente.update(Cliente, {
       where: {id},
       returning: true,
@@ -52,5 +61,10 @@ export class ClienteService {
     }).finally( () => {
       console.log("Fim da Remoção!")
     });
+  }
+
+  async updateCodigo(codigo: string ){
+    await this.conteinerService.updateByCodigo(codigo);
+    await this.movimentacaoService.updateByCodigo(codigo);
   }
 }
