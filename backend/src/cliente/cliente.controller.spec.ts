@@ -3,6 +3,20 @@ import { ClienteController } from './cliente.controller';
 import { ClienteService } from './cliente.service';
 import { Cliente } from './dto/cliente.dto';
 
+const mockClienteService = {
+  create: jest.fn(),
+  findAll: jest.fn(),
+  findOne: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
+}
+
+const cliente: Cliente = { 
+  id: 1, 
+  codigo: 'ITC', 
+  nome: 'Internacional Tecnology Company'
+};
+
 describe('ClienteController', () => {
   let controller: ClienteController;
   let service: ClienteService;
@@ -11,16 +25,7 @@ describe('ClienteController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClienteController],
       providers: [
-        {
-          provide: ClienteService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-          },
-        },
+        { provide: ClienteService, useValue: mockClienteService}
       ],
     }).compile();
 
@@ -29,38 +34,33 @@ describe('ClienteController', () => {
 
   });
 
-  it('should be defined', () => {
+  it('verificar existencia da controller', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should create a client', async () => {
-    const clienteDto: Cliente = { id: 1, codigo: '123', nome: 'Test Client' };
-    const createdCliente = { ...clienteDto, conteineres: [], $add: jest.fn(), $set: jest.fn(), $get: jest.fn() };
-    jest.spyOn(service, 'create').mockResolvedValue(createdCliente as any);
-    expect(await controller.create(clienteDto)).toBe(createdCliente);
+   it('cadastrar cliente', async () => {
+    mockClienteService.create.mockResolvedValue(cliente);
+    expect(await controller.create(cliente)).toBe(cliente);
   });
 
-  it('should return an array of clients', async () => {
-    const result = ['test'];
-    jest.spyOn(service, 'findAll').mockResolvedValue(result);
-    expect(await controller.findAll()).toBe(result);
+  it('lista de clientes', async () => {
+    mockClienteService.findAll.mockResolvedValue([cliente]);
+    expect(await controller.findAll()).toStrictEqual([cliente]);
   });
 
-  it('should return a client by id', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'findOne').mockResolvedValue(result);
-    expect(await controller.findOne('1')).toBe(result);
+  it('buscar cliente pelo id', async () => {
+    mockClienteService.findOne.mockResolvedValue(cliente);
+    expect(await controller.findOne(cliente.id.toString())).toBe(cliente);
+    });
+    
+  it('atualizar cliente', async () => {
+  mockClienteService.update.mockResolvedValue(cliente);
+  expect(await controller.update(cliente)).toEqual(cliente);
   });
-
-  it('should update a client', async () => {
-    const clienteDto: Cliente = { id: 1, codigo: '123', nome: 'Updated Client' };
-    jest.spyOn(service, 'update').mockResolvedValue('someValue');
-    expect(await controller.update(clienteDto)).toBe('someValue');
-  });
-
-  it('should remove a client', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'remove').mockResolvedValue(result);
-    expect(await controller.remove('1')).toBe(result);
-  });
+      
+      
+  it('remover cliente', async () => {
+    mockClienteService.remove.mockResolvedValue(cliente);
+    expect(await controller.remove(cliente.id.toString())).toBe(cliente);
+  }); 
 });

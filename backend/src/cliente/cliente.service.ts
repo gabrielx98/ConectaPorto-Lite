@@ -38,20 +38,18 @@ export class ClienteService {
   }
 
   async update(Cliente: Cliente) {
-    var id = Cliente.id;
-    var cliente = await this.clienteRepository.findByPk(id);
-    if(cliente.codigo != Cliente.codigo){
-      this.updateCodigo(Cliente.codigo, cliente.codigo);
+    var cliente = await this.clienteRepository.findByPk(Cliente.id);
+    
+    if(Cliente?.codigo != cliente?.codigo){
+      this.updateCodigo(Cliente.codigo, cliente?.codigo);
     }
-    return await cliente.update(Cliente, {
-      where: {id},
-      returning: true,
-    }).catch(erro => {
+    await cliente.update(Cliente).catch(erro => {
       return erro;
     }).finally( () => {
       console.log("Fim da Atualização!")
     });
-  }
+    return Cliente;
+    }
 
   async remove(id: number) {
     return await this.clienteRepository.destroy({

@@ -5,5 +5,4 @@ categoria movimentação = ['REPOSICIONAMENTO', 'EMBARQUE', 'DESCARGA', 'GATE IN
 
 login
 
-testes
 

@@ -11,14 +11,12 @@ export class MovimentacaoService {
   constructor(
     @InjectModel(Movimentacoes)
     private movimentacaoRepository: typeof Movimentacoes,
-    //private conteinerService: ConteinerService
     @InjectModel(Conteineres)
     private conteinerRepository: typeof Conteineres
   ) {}
 
   async create(NewMovimentacao: MovimentacaoModel) {
     const conteiner = await this.conteinerRepository.findByPk(NewMovimentacao.conteinerId);
-    //const conteiner =  await this.conteinerService.findOne(NewMovimentacao.conteinerId);
     NewMovimentacao.codigo = conteiner.codigo + "_" + Date.now().toString();
     return await this.movimentacaoRepository.create(Movimentacao.fromModel(NewMovimentacao) as any)
     .catch(erro => {
@@ -45,7 +43,6 @@ export class MovimentacaoService {
   }
 
   async findUnitAll(id: number) {
-    //const conteiner =  await this.conteinerService.findOne(id);
     return await this.movimentacaoRepository.findAll({
       where: {
         conteinerId: id
@@ -81,7 +78,7 @@ export class MovimentacaoService {
       const oldConteiner = await this.conteinerRepository.findByPk(movimentacao.conteinerId);
       Movimentacao.codigo = Movimentacao.codigo.replace(oldConteiner.codigo, newConteiner.codigo);
     }
-    return await movimentacao.update(Movimentacao, {
+    await movimentacao.update(Movimentacao, {
       where: {id},
       returning: true,
     }).catch(erro => {
@@ -89,6 +86,7 @@ export class MovimentacaoService {
     }).finally( () => {
       console.log("Fim da Atualização!")
     });
+    return Movimentacao;
   }
 
   async remove(id: number) {

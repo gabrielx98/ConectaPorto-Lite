@@ -4,67 +4,80 @@ import { ClienteService } from './cliente.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { Clientes } from './entities/cliente.entity';
 import { Cliente } from './dto/cliente.dto';
+import { ConteinerService } from '../conteiner/conteiner.service';
+import { MovimentacaoService } from '../movimentacao/movimentacao.service';
+
+const mockClienteRepository = {
+  create: jest.fn(),
+  findAll: jest.fn(),
+  findByPk: jest.fn(),
+  update: jest.fn(),
+  destroy: jest.fn(),
+};
+
+const mockConteinerService = {
+  updateByCodigo: jest.fn(),
+};
+
+const mockMovimentacaoService = {
+  updateByCodigo: jest.fn(),
+};
+
+const cliente: Cliente = 
+  { 
+    id: 1, 
+    codigo: "ITC", 
+    nome: 'Internacional Tecnology Company' 
+  };
 
 describe('ClienteService', () => {
   let service: ClienteService;
-  let model: typeof Clientes;
-
+  
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ClienteService,
-        {
-          provide: getModelToken(Clientes),
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findByPk: jest.fn(),
-            update: jest.fn(),
-            destroy: jest.fn(),
-          },
-        },
+
+        { provide: getModelToken(Clientes), useValue: mockClienteRepository },
+        { provide: ConteinerService, useValue: mockConteinerService},
+        { provide: MovimentacaoService, useValue: mockMovimentacaoService},
       ],
     }).compile();
 
     service = module.get<ClienteService>(ClienteService);
-    model = module.get<typeof Clientes>(getModelToken(Clientes));
-
+    
   });
 
-  it('should be defined', () => {
+  it('verificar existencia de serviço', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create a client', async () => {
-    const clienteDto: Cliente = { id: 1, codigo: '123', nome: 'Test Client' };
-    jest.spyOn(model, 'create').mockResolvedValue(clienteDto as any);
-    expect(await service.create(clienteDto)).toBe(clienteDto);
+   it('cadastro de cliente', async () => {
+    mockClienteRepository.create.mockResolvedValue(cliente);
+    expect(await service.create(cliente)).toBe(cliente);
   });
 
-  it('should return an array of clients', async () => {
-    const result = ['test'];
-    jest.spyOn(model, 'findAll').mockResolvedValue(result as any);
-    expect(await service.findAll()).toBe(result);
+  
+  it('lista de clientes', async () => {
+    mockClienteRepository.findAll.mockResolvedValue([cliente]);
+    expect(await service.findAll()).toEqual([cliente]);
   });
 
-  it('should return a client by id', async () => {
-    const result = 'test';
-    jest.spyOn(model, 'findByPk').mockResolvedValue(result as any);
-    expect(await service.findOne(1)).toBe(result);
+  it('buscar cliente pelo id', async () => {
+    mockClienteRepository.findByPk.mockResolvedValue(cliente);
+    expect(await service.findOne(cliente.id)).toBe(cliente);
   });
 
-  it('should update a client', async () => {
-    const clienteDto: Cliente = { id: 1, codigo: '123', nome: 'Updated Client' };
-    const updatedCliente = { ...clienteDto, name: 'updated' };
-    jest.spyOn(model, 'findByPk').mockResolvedValue({
-      update: jest.fn().mockResolvedValue(updatedCliente),
-    } as any);
-    expect(await service.update(clienteDto)).toBe(updatedCliente);
+  it('atualizar cliente', async () => {
+    const updatedCliente = { ...cliente, nome: 'Internacional Tecnology Cybersecurity', codigo: 'ITS' };
+    mockClienteRepository.findByPk.mockResolvedValue({
+      update: jest.fn().mockResolvedValue(cliente),
+    });
+    expect((await service.update(updatedCliente))).toEqual(updatedCliente);
   });
 
-  it('should remove a client', async () => {
-    const result = 1;
-    jest.spyOn(model, 'destroy').mockResolvedValue(result as any);
-    expect(await service.remove(1)).toBe(result);
+  it('remover cliente', async () => {
+    mockClienteRepository.destroy.mockResolvedValue(cliente);
+    expect(await service.remove(cliente.id)).toBe(cliente);
   });
 });

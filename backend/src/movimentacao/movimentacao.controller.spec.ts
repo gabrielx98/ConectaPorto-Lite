@@ -2,6 +2,37 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MovimentacaoController } from './movimentacao.controller';
 import { MovimentacaoService } from './movimentacao.service';
 import { Movimentacao, MovimentacaoModel } from './dto/movimentacao.dto';
+import { mock } from 'node:test';
+
+const mockMovimentacaoService = {
+  create: jest.fn(),
+  findAll: jest.fn(),
+  findLastUpdate: jest.fn(),
+  findOne: jest.fn(),
+  findUnitAll: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
+}
+
+const movimentacao: Movimentacao = { 
+  id: 1, 
+  codigo: 'ABC0000001_1734548042806', 
+  categoria: 'GATE IN', 
+  clienteId: 1, 
+  conteinerId: 1, 
+  dataInicio: new Date(), 
+  dataFim: new Date()
+};
+
+const movimentacaoModel: MovimentacaoModel = {
+  id: 1,
+  codigo: 'ABC0000001_1734548042806',
+  categoria: 'GATE IN',
+  clienteId: 1,
+  conteinerId: 1,
+  dataInicio: new Date().toISOString(),
+  dataFim: new Date().toISOString(),
+};
 
 describe('MovimentacaoController', () => {
   let controller: MovimentacaoController;
@@ -12,18 +43,7 @@ describe('MovimentacaoController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MovimentacaoController],
       providers: [
-        {
-          provide: MovimentacaoService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findLastUpdate: jest.fn(),
-            findOne: jest.fn(),
-            findUnitAll: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-          },
-        },
+        { provide: MovimentacaoService, useValue: mockMovimentacaoService}
       ],
     }).compile();
 
@@ -32,71 +52,47 @@ describe('MovimentacaoController', () => {
 
   });
 
-  it('should be defined', () => {
+  it('verificar existencia da controller', () => {
     expect(controller).toBeDefined();
   });
 
   it('should create a movimentacao', async () => {
-    const movimentacaoDto: MovimentacaoModel = {
-      id: 1,
-      codigo: 'ABC123',
-      categoria: 'categoria1',
-      clienteId: 1,
-      dataInicio: new Date().toISOString(),
-      dataFim: new Date().toISOString(),
-      conteinerId: 1
-    };
-    jest.spyOn(service, 'create').mockResolvedValue('someValue');
-    expect(await controller.create(movimentacaoDto)).toBe('someValue');
+    mockMovimentacaoService.create.mockResolvedValue(movimentacao);
+    expect(await controller.create(movimentacaoModel)).toBe(movimentacao);
   });
 
-  it('should return an array of movimentacoes', async () => {
-    const result = ['test'];
-    jest.spyOn(service, 'findAll').mockResolvedValue(result);
-    expect(await controller.findAll()).toBe(result);
+  it('listar movimentacoes', async () => {
+    mockMovimentacaoService.findAll.mockResolvedValue([movimentacao]);
+    expect(await controller.findAll()).toStrictEqual([movimentacao]);
   });
 
-  it('should return the last updated movimentacao', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'findLastUpdate').mockResolvedValue(result);
-    expect(await controller.findNow()).toBe(result);
+  it('retorna as ultimas atualizações das movimentações', async () => {
+    mockMovimentacaoService.findLastUpdate.mockResolvedValue(movimentacao);
+    expect(await controller.findNow()).toBe(movimentacao);
   });
 
-  it('should return the last updated movimentacao for a client', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'findLastUpdate').mockResolvedValue(result);
-    expect(await controller.findNowClient('1')).toBe(result);
+  it('retorna as ultimas atualizações das movimentações pelo id do cliente', async () => {
+    mockMovimentacaoService.findLastUpdate.mockResolvedValue(movimentacao);
+    expect(await controller.findNowClient(movimentacao.clienteId.toString())).toBe(movimentacao);
   });
 
-  it('should return a movimentacao by id', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'findOne').mockResolvedValue(result);
-    expect(await controller.findOne('1')).toBe(result);
+  it('buscar movimentacao pelo id', async () => {
+    mockMovimentacaoService.findOne.mockResolvedValue(movimentacao);
+    expect(await controller.findOne(movimentacao.id.toString())).toBe(movimentacao);
   });
 
-  it('should return movimentacoes by conteiner id', async () => {
-    const result = ['test'];
-    jest.spyOn(service, 'findUnitAll').mockResolvedValue(result);
-    expect(await controller.findByConteiner('1')).toBe(result);
+  it('buscar movimentacoes pelo id do conteiner', async () => {
+    mockMovimentacaoService.findUnitAll.mockResolvedValue([movimentacao]);
+    expect(await controller.findByConteiner(movimentacao.id.toString())).toEqual([movimentacao]);
   });
 
-  it('should update a movimentacao', async () => {
-    const movimentacaoDto: Movimentacao = {
-      id: 1,
-      codigo: 'ABC123',
-      categoria: 'categoria1',
-      clienteId: 1,
-      dataInicio: new Date(),
-      dataFim: new Date(),
-      conteinerId: 1
-    };
-    jest.spyOn(service, 'update').mockResolvedValue('someValue');
-    expect(await controller.update(movimentacaoDto)).toBe('someValue');
+  it('atualizar movimentacao', async () => {
+    mockMovimentacaoService.update.mockResolvedValue(movimentacao);
+    expect(await controller.update(movimentacao)).toBe(movimentacao);
   });
 
-  it('should remove a movimentacao', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'remove').mockResolvedValue(result);
-    expect(await controller.remove('1')).toBe(result);
+  it('remover movimentacao', async () => {
+    mockMovimentacaoService.remove.mockResolvedValue(movimentacao);
+    expect(await controller.remove(movimentacao.id.toString())).toBe(movimentacao);
   });
 });

@@ -9,27 +9,28 @@ export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
   @Post('/cadastrar')
-  create(@Body() Cliente: Cliente) {
+  async create(@Body() Cliente: Cliente) {
     return this.clienteService.create(Cliente);
   }
 
   @Get('/listar')
-  findAll() {
+  async findAll() {
     return this.clienteService.findAll();
   }
 
   @Get('/buscar/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.clienteService.findOne(+id);
   }
 
   @Patch('/atualizar')
-  update(@Body() Cliente: Cliente) {
+  async update(@Body() Cliente: Cliente) {
     return this.clienteService.update(Cliente);
   }
 
   @Delete('/remover/:id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.clienteService.remove(+id);
   }
+
 }

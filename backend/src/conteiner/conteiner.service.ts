@@ -51,14 +51,12 @@ export class ConteinerService {
   async update(Conteiner: Conteiner) {
     var id = Conteiner.id;
     var conteiner = await this.conteinerRepository.findByPk(id);
-    return await conteiner.update(Conteiner, {
-      where: {id},
-      returning: true,
-    }).catch(erro => {
+    await conteiner.update(Conteiner).catch(erro => {
       return erro;
     }).finally( () => {
       console.log("Fim da Atualização!")
     });
+    return Conteiner;
   }
 
   async remove(id: number) {

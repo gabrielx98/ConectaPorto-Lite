@@ -1,7 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConteinerController } from './conteiner.controller';
 import { ConteinerService } from './conteiner.service';
-import { Conteiner } from './dto/conteiner.dto';
+
+const mockConteinerService = {
+  create: jest.fn(),
+  findAll: jest.fn(),
+  findByClient: jest.fn(),
+  findOne: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
+}
+
+const conteiner = { 
+  id: 1, 
+  codigo: 'ABC1234567', 
+  categoria: 'Importação', 
+  clienteId: 1, 
+  tamanho: '20 PÉS', 
+  estado: 'VAZIO' 
+};
 
 describe('ConteinerController', () => {
   let controller: ConteinerController;
@@ -11,17 +28,7 @@ describe('ConteinerController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ConteinerController],
       providers: [
-        {
-          provide: ConteinerService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findByClient: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-          },
-        },
+        { provide: ConteinerService, useValue: mockConteinerService}
       ],
     }).compile();
 
@@ -29,58 +36,37 @@ describe('ConteinerController', () => {
     service = module.get<ConteinerService>(ConteinerService);
   });
 
-  it('should be defined', () => {
+  it('verificar existencia da controller', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should create a container', async () => {
-    const conteinerDto: Conteiner = {
-      id: 1,
-      codigo: 'ABC123',
-      categoria: 'General',
-      clienteId: 1,
-      tamanho: '20ft',
-      estado: 'Active'
-    };
-    const createdConteiner = { ...conteinerDto, cliente: {}, $add: jest.fn(), $set: jest.fn(), $get: jest.fn() };
-    jest.spyOn(service, 'create').mockResolvedValue(createdConteiner as any);
-    expect(await controller.create(conteinerDto)).toBe(createdConteiner);
+  it('cadastrar container', async () => {
+    mockConteinerService.create.mockResolvedValue(conteiner);
+    expect(await controller.create(conteiner)).toBe(conteiner);
   });
 
-  it('should return an array of containers', async () => {
-    const result = ['test'];
-    jest.spyOn(service, 'findAll').mockResolvedValue(result);
-    expect(await controller.findAll()).toBe(result);
+  it('lista de conteineres', async () => {
+    mockConteinerService.findAll.mockResolvedValue([conteiner]);
+    expect(await controller.findAll()).toStrictEqual([conteiner]);
   });
 
-  it('should return a container by client id', async () => {
-    const result = 'test';
-    jest.spyOn(service, 'findByClient').mockResolvedValue(result);
-    expect(await controller.findByClient('1')).toBe(result);
+  it('buscar container pelo id do cliente', async () => {
+    mockConteinerService.findByClient.mockResolvedValue(conteiner);
+    expect(await controller.findByClient(conteiner.clienteId.toString())).toBe(conteiner);
   });
 
-  it('should return a container by id', async () => {
-  const result = 'test';
-  jest.spyOn(service, 'findOne').mockResolvedValue(result);
-  expect(await controller.findOne('1')).toBe(result);
+  it('buscar container pelo id', async () => {
+  mockConteinerService.findOne.mockResolvedValue(conteiner);
+  expect(await controller.findOne(conteiner.id.toString())).toBe(conteiner);
 });
 
 it('should update a container', async () => {
-  const conteinerDto: Conteiner = {
-    id: 1,
-    codigo: 'ABC123',
-    categoria: 'General',
-    clienteId: 1,
-    tamanho: '20ft',
-    estado: 'Active'
-  };
-  jest.spyOn(service, 'update').mockResolvedValue('someValue');
-  expect(await controller.update(conteinerDto)).toBe('someValue');
+  mockConteinerService.update.mockResolvedValue(conteiner);
+  expect(await controller.update(conteiner)).toEqual(conteiner);
 });
 
-it('should remove a container', async () => {
-  const result = 'test';
-  jest.spyOn(service, 'remove').mockResolvedValue(result);
-  expect(await controller.remove('1')).toBe(result);
+it('remover container', async () => {
+  mockConteinerService.remove.mockResolvedValue(conteiner);
+  expect(await controller.remove(conteiner.id.toString())).toBe(conteiner);
 });
 });

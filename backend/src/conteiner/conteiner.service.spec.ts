@@ -3,6 +3,7 @@ import { ConteinerService } from './conteiner.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { Conteineres } from './entities/conteiner.entity';
 import { ClienteService } from '../cliente/cliente.service';
+import { mock } from 'node:test';
 
 const mockConteinerRepository = {
   create: jest.fn(),
@@ -12,8 +13,13 @@ const mockConteinerRepository = {
   destroy: jest.fn(),
 };
 
-const mockClienteService = {
-  findOne: jest.fn(),
+const conteiner = { 
+  id: 1, 
+  codigo: 'ABC1234567', 
+  categoria: 'Importação', 
+  clienteId: 1, 
+  tamanho: '20 PÉS', 
+  estado: 'VAZIO' 
 };
 
 describe('ConteinerService', () => {
@@ -24,51 +30,47 @@ describe('ConteinerService', () => {
       providers: [
         ConteinerService,
         { provide: getModelToken(Conteineres), useValue: mockConteinerRepository },
-        { provide: ClienteService, useValue: mockClienteService },
       ],
     }).compile();
 
     service = module.get<ConteinerService>(ConteinerService);
   });
 
-  it('should be defined', () => {
+  it('verificar existencia de serviço', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create a container', async () => {
-    const conteiner = { id: 1, name: 'Test Conteiner', codigo: 'C123', categoria: 'A', clienteId: 1, tamanho: '20', estado: 'Ativo' };
+  it('cadastro de container', async () => {
     mockConteinerRepository.create.mockResolvedValue(conteiner);
-    expect(await service.create(conteiner)).toEqual(conteiner);
+    expect(await service.create(conteiner)).toBe(conteiner);
   });
 
-  it('should find all containers', async () => {
-    const conteineres = [{ id: 1, name: 'Test Conteiner' }];
-    mockConteinerRepository.findAll.mockResolvedValue(conteineres);
-    expect(await service.findAll()).toEqual(conteineres);
+  it('lista de containers', async () => {
+    mockConteinerRepository.findAll.mockResolvedValue([conteiner]);
+    expect(await service.findAll()).toEqual([conteiner]);
   });
 
-  it('should find a container by id', async () => {
-    const conteiner = { id: 1, name: 'Test Conteiner' };
+  it('buscar container pelo id', async () => {
     mockConteinerRepository.findByPk.mockResolvedValue(conteiner);
-    expect(await service.findOne(1)).toEqual(conteiner);
+    expect(await service.findOne(conteiner.id)).toBe(conteiner);
+  });
+  
+  it('buscar conteineres pelo id do cliente', async () => {
+    mockConteinerRepository.findAll.mockResolvedValue(conteiner);
+    expect(await service.findByClient(conteiner.clienteId)).toEqual(conteiner);
   });
 
-  it('should update a container', async () => {
-    const conteiner = { id: 1, name: 'Updated Conteiner', codigo: 'C123', categoria: 'A', clienteId: 1, tamanho: '20', estado: 'Ativo' };
+  it('atualizar container', async () => {
+    const updatedConteiner = { ...conteiner, estado: 'CHEIO'};
     mockConteinerRepository.findByPk.mockResolvedValue({
-      update: jest.fn().mockResolvedValue(conteiner),
+      update: jest.fn().mockResolvedValue(updatedConteiner),
     });
-    expect(await service.update(conteiner)).toEqual(conteiner);
+    expect(await service.update(updatedConteiner)).toEqual(updatedConteiner);
+  });
+  
+  it('remover container', async () => {
+    mockConteinerRepository.destroy.mockResolvedValue(conteiner);
+    expect(await service.remove(conteiner.id)).toBe(conteiner);
   });
 
-  it('should remove a container', async () => {
-    mockConteinerRepository.destroy.mockResolvedValue(1);
-    expect(await service.remove(1)).toEqual(1);
-  });
-
-  it('should find containers by client id', async () => {
-    const conteineres = [{ id: 1, name: 'Test Conteiner', clienteId: 1 }];
-    mockConteinerRepository.findAll.mockResolvedValue(conteineres);
-    expect(await service.findByClient(1)).toEqual(conteineres);
-  });
 });
