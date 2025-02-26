@@ -39,7 +39,7 @@ const mockConteinerRepository = {
   findAll: jest.fn(),
   findByPk: jest.fn(),
   update: jest.fn(),
-  destroy: jest.fn(),
+  destroy: jest.fn()
 };
 
 const mockMovimentacaoRepository = {
@@ -48,6 +48,7 @@ const mockMovimentacaoRepository = {
   findByPk: jest.fn(),
   update: jest.fn(),
   destroy: jest.fn(),
+  findOne: jest.fn()
 };
 
 describe('MovimentacaoService', () => {
@@ -91,10 +92,10 @@ describe('MovimentacaoService', () => {
     expect(await service.findUnitAll(movimentacao.conteinerId)).toBe(movimentacao);
   }); 
 
-  /* it('should return the last updated movimentacao for a client', async () => {
-    mockMovimentacaoRepository.findAll.mockResolvedValue(movimentacao);
-    expect(await service.findLastUpdate(movimentacao.id)).toBe(movimentacao);
-  }); */
+  it('retorna as ultimas atualizações das movimentações pelo id do cliente', async () => {
+    mockMovimentacaoRepository.findOne.mockResolvedValue(movimentacao);
+    expect(await service.findLastUpdate(movimentacao.clienteId)).toBe(movimentacao);
+  });
 
   it('atualizar movimentacao', async () => {
     const updatedMovimentacao = { ...movimentacao, categoria: 'GATE OUT'};

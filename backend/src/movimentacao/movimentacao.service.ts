@@ -56,21 +56,20 @@ export class MovimentacaoService {
   }
 
   async findLastUpdate(id?: number) {
-    let query = 'SELECT * FROM Movimentacoes m INNER JOIN (SELECT id,MAX(updatedAt) as maxDataAtualizacao FROM Movimentacoes ';
-    if (id){
-      query += `WHERE clienteId = ${id} `;
-    }
-    query += 'GROUP BY id) as ultimas ON m.id = ultimas.id AND m.updatedAt = ultimas.maxDataAtualizacao';
-
-    return await this.movimentacaoRepository.sequelize.query(query)
+    const whereClause = id ? { clienteId: id } : {};
+    return await this.movimentacaoRepository.findOne({
+      where: whereClause,
+      order: [['updatedAt', 'DESC']]
+    })
     .catch(erro => {
       return erro;
     }).finally(() => {
-      console.log("Fim da consulta")
+      console.log("Fim da consulta");
     });
   }
 
-  async update(Movimentacao: Movimentacao) {
+  async update(Model: MovimentacaoModel) {
+    var Movimentacao = Movimentacao.fromModel(Model);
     var id = Movimentacao.id;
     var movimentacao = await this.movimentacaoRepository.findByPk(id);
     if(movimentacao.conteinerId != Movimentacao.conteinerId.toString()){

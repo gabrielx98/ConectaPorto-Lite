@@ -17,11 +17,20 @@ const useConteineres = () => {
       var conteiner;
       try {
         if(id !== undefined){
-          conteiner = await axios(baseURL + `/Conteiner/Buscar/${id}`)
+          conteiner = await axios(baseURL + `/Conteiner/Buscar/${id}`,{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }})
         }else{
-          conteiner = await axios(baseURL + "/conteiner/listar");
+          conteiner = await axios(baseURL + "/conteiner/listar",{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }});
         }
-        const cliente = await axios(baseURL + "/cliente/listar");
+        const cliente = await axios(baseURL + "/cliente/listar",{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }});
         setConteineres(conteiner.data);
         setClientes(cliente.data);
       } catch (err) {
@@ -39,7 +48,10 @@ const useConteineres = () => {
   const cadastrarConteiner = async (novoConteiner) => {
     setLoading(true);
     try {
-      const response = await axios.post(baseURL + '/conteiner/cadastrar', novoConteiner);
+      const response = await axios.post(baseURL + '/conteiner/cadastrar', novoConteiner,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }});
       
       setConteineres([...Conteineres, response.data]);
       
@@ -50,14 +62,17 @@ const useConteineres = () => {
       }
     } catch (err) {
       setError(err);
-      toast.error("Erro ao Registrar.")
+      toast.error(err.response.data.message)
     }
   };
 
   const atualizarConteiner = async (ConteinerAtualizado) => {
     setLoading(true);
     try {
-      const response = await axios.patch(baseURL + `/conteiner/atualizar`, ConteinerAtualizado);
+      const response = await axios.patch(baseURL + `/conteiner/atualizar`, ConteinerAtualizado,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }});
       setConteineres(response.data);
       if(response.status === HttpStatusCode.Ok){
         setLoading(false);
@@ -73,7 +88,10 @@ const useConteineres = () => {
   const deletarConteiner = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(baseURL + `/Conteiner/Remover/${id}`);
+      await axios.delete(baseURL + `/Conteiner/Remover/${id}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }});
       setConteineres(Conteineres.filter(Conteiner => Conteiner.id !== id));
     } catch (err) {
       setError(err);

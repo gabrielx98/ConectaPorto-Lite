@@ -1,10 +1,9 @@
-import { forwardRef, Injectable, Inject } from '@nestjs/common';
+import { forwardRef, Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { Cliente } from './dto/cliente.dto';
 import { Clientes } from './entities/cliente.entity';
-import { InjectModel } from '@nestjs/sequelize';
 import { ConteinerService} from '../conteiner/conteiner.service';
 import { MovimentacaoService} from '../movimentacao/movimentacao.service';
-import { ConteinerModule } from 'src/conteiner/conteiner.module';
 
 @Injectable()
 export class ClienteService {
@@ -16,9 +15,14 @@ export class ClienteService {
     private movimentacaoService: MovimentacaoService 
   ) {}
 
-
   async create(Cliente: Cliente) {
-    return await this.clienteRepository.create(Cliente as any);
+    const cliente = this.clienteRepository.findOne({
+      where: { nome: Cliente.nome }
+    })
+    if(cliente){
+      throw new HttpException('Cliente já cadastrado!', HttpStatus.CONFLICT)
+    }
+    return await this.clienteRepository.create(Cliente);
   }
 
   async findAll() {

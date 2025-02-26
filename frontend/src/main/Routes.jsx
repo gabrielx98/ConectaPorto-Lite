@@ -11,19 +11,24 @@ import MovimentacoesHome from "../components/movimentacoes/MovimentacoesHome";
 import MovimentacoesCadastro from "../components/movimentacoes/MovimentacoesCadastro";
 import ConteineresAtualizar from "../components/conteineres/ConteineresAtualizar";
 import MovimentacoesAtualizar from "../components/movimentacoes/MovimentacoesAtualizar";
+import Login from "../components/security/Login";
+import Cadastrar from "../components/security/Cadastrar";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => (
     <Routes>
         <Route exact path="/" element={<Home />} />
-        <Route path="/clientes" element={<ClientesHome />} />
-        <Route path="/clientes/cadastro" element={<ClientesCadastro />} />
-        <Route path="/clientes/atualizar/:id" element={<ClientesAtualizar/>} />
-        <Route path="/conteineres" element={<ConteineresHome />} />
-        <Route path="/conteineres/cadastro" element={<ConteineresCadastro />} />
-        <Route path="/conteineres/atualizar/:id" element={<ConteineresAtualizar/>} />
-        <Route path="/movimentacoes" element={<MovimentacoesHome />} />
-        <Route path="/movimentacoes/cadastro" element={<MovimentacoesCadastro />} />
-        <Route path="/movimentacoes/atualizar/:id" element={<MovimentacoesAtualizar/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastrar" element={<Cadastrar />} />
+        <Route path="/clientes" element={<ProtectedRoute><ClientesHome /></ProtectedRoute>} />
+        <Route path="/clientes/cadastro" element={<ProtectedRoute><ClientesCadastro /></ProtectedRoute>} />
+        <Route path="/clientes/atualizar/:id" element={<ProtectedRoute><ClientesAtualizar/></ProtectedRoute>} />
+        <Route path="/conteineres" element={<ProtectedRoute><ConteineresHome /></ProtectedRoute>} />
+        <Route path="/conteineres/cadastro" element={<ProtectedRoute><ConteineresCadastro /></ProtectedRoute>} />
+        <Route path="/conteineres/atualizar/:id" element={<ProtectedRoute><ConteineresAtualizar/></ProtectedRoute>} />
+        <Route path="/movimentacoes" element={<ProtectedRoute><MovimentacoesHome /></ProtectedRoute>} />
+        <Route path="/movimentacoes/cadastro" element={<ProtectedRoute><MovimentacoesCadastro /></ProtectedRoute>} />
+        <Route path="/movimentacoes/atualizar/:id" element={<ProtectedRoute><MovimentacoesAtualizar/></ProtectedRoute>} />
         <Route path="*" element={<Home />} />
     </Routes>
 );

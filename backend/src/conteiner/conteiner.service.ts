@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { Conteiner } from './dto/conteiner.dto';
 import { Conteineres } from './entities/conteiner.entity';
 
@@ -15,6 +15,12 @@ export class ConteinerService {
   ) {}
 
   async create(Conteiner: Conteiner) {
+    const conteiner = this.conteinerRepository.findOne({
+      where: { codigo: Conteiner.codigo}
+    })
+    if(conteiner){
+      throw new HttpException('Conteiner já cadastrado', HttpStatus.CONFLICT)
+    }
     return await this.conteinerRepository.create(Conteiner as any)
   }
 

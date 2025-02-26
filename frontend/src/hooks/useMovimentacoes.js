@@ -18,12 +18,28 @@ const useMovimentacoes = () => {
       try {
         var movimentacao;
         if(id !== undefined){
-          movimentacao = await axios(baseURL + `/Movimentacao/Buscar/${id}`);
+          movimentacao = (await axios(baseURL + `/Movimentacao/Buscar/${id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }));
         }else{
-          movimentacao = await axios(baseURL + "/Movimentacao/Listar");
+          movimentacao = await axios(baseURL + "/Movimentacao/Listar", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          });
         }
-        const conteiner = await axios(baseURL + "/conteiner/listar");
-        const cliente = await axios(baseURL + "/cliente/listar");
+        const conteiner = await axios(baseURL + "/conteiner/listar", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const cliente = await axios(baseURL + "/cliente/listar", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         setMovimentacoes(movimentacao.data);
         setClientes(cliente.data);
         setConteineres(conteiner.data);
@@ -42,7 +58,11 @@ const useMovimentacoes = () => {
   const cadastrarMovimentacao = async (novoMovimentacao) => {
     setLoading(true);
     try {
-      const response = await axios.post(baseURL + '/Movimentacao/Cadastrar', novoMovimentacao);
+      const response = await axios.post(baseURL + '/Movimentacao/Cadastrar', novoMovimentacao, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setMovimentacoes([...Movimentacoes, response.data]);
 
       if(response.status === HttpStatusCode.Created){
@@ -59,7 +79,11 @@ const useMovimentacoes = () => {
   const atualizarMovimentacao = async (MovimentacaoAtualizado) => {
     setLoading(true);
     try {
-      const response = await axios.patch(baseURL + `/movimentacao/atualizar`, MovimentacaoAtualizado);
+      const response = await axios.patch(baseURL + `/movimentacao/atualizar`, MovimentacaoAtualizado, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setMovimentacoes(response.data);
       if(response.status === HttpStatusCode.Ok){
         setLoading(false);
@@ -76,7 +100,10 @@ const useMovimentacoes = () => {
   const deletarMovimentacao = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(baseURL + `/Movimentacao/Remover/${id}`);
+      await axios.delete(baseURL + `/Movimentacao/Remover/${id}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }});
       setMovimentacoes(Movimentacoes.filter(Movimentacao => Movimentacao.id !== id));
     } catch (err) {
       setError(err);

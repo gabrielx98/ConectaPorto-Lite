@@ -60,7 +60,7 @@ describe('ConteinerController', () => {
   expect(await controller.findOne(conteiner.id.toString())).toBe(conteiner);
 });
 
-it('should update a container', async () => {
+it('atualizar container', async () => {
   mockConteinerService.update.mockResolvedValue(conteiner);
   expect(await controller.update(conteiner)).toEqual(conteiner);
 });
